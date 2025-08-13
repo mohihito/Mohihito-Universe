@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', Arial, sans-serif;
+  color: #f3f3f3;
+  background: #0d1020;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.blackhole-bg {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+}
+
+header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding-top: 60px;
+}
+
+.universe-pop {
+  font-size: 3rem;
+  letter-spacing: 0.1em;
+  color: #fff;
+  text-shadow: 0 0 20px #00faff, 0 0 50px #0ff;
+  animation: popIn 1.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.5);}
+  60% { opacity: 1; transform: scale(1.1);}
+  100% { transform: scale(1);}
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #d0e6ff;
+  margin-bottom: 40px;
+  text-shadow: 0 0 8px #0ff8, 0 0 20px #0af4;
+}
+
+main {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px 100px 20px;
+  background: rgba(10, 12, 30, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 0 40px 2px #08f6, 0 0 120px #000a;
+}
+
+section {
+  margin-bottom: 48px;
+}
+
+h2 {
+  color: #fff7;
+  border-bottom: 1px solid #fff3;
+  padding-bottom: 8px;
+  margin-bottom: 22px;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.gallery img, .gallery video {
+  max-width: 220px;
+  border-radius: 8px;
+  box-shadow: 0 0 16px #08f9;
+  background: #222;
+}
+
+.socials ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 24px;
+  font-size: 1.1rem;
+}
+
+.socials a {
+  color: #00ffe7;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.socials a:hover {
+  color: #ff11ff;
+}
+
+.contact a {
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 0 0 10px #fff9;
+}
+
+footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff3;
+  font-size: 1rem;
+  padding: 30px 0 15px 0;
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  main {
+    padding: 15px 5px 70px 5px;
+  }
+  .gallery img, .gallery video {
+    max-width: 100px;
+  }
+}
