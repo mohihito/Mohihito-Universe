@@ -1,4 +1,4 @@
-// Nowoczesna, pełnoekranowa czarna dziura w stylu x.ai – minimalistyczny efekt 3D
+// Animowany efekt czarnej dziury w stylu "Interstellar" z dynamicznym dyskiem na ukos
 
 const canvas = document.getElementById('blackhole-canvas');
 const ctx = canvas.getContext('2d');
@@ -9,103 +9,140 @@ function resizeCanvas() {
   height = window.innerHeight;
   centerX = width / 2;
   centerY = height / 2;
-  scale = Math.min(width, height) / 900;
+  scale = Math.min(width, height) / 1200;
   canvas.width = width;
   canvas.height = height;
 }
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-// Gwiazdy - efekt subtelny, nowoczesny
+// Subtelne gwiazdy
 const stars = [];
-for (let i = 0; i < 210; i++) {
+for (let i = 0; i < 150; i++) {
   stars.push({
     x: Math.random(),
     y: Math.random(),
-    r: Math.random() * 1.12 + 0.15,
-    opacity: Math.random() * 0.38 + 0.18,
+    r: Math.random() * 1.1 + 0.2,
+    opacity: Math.random() * 0.8 + 0.1,
   });
 }
 
 function drawStars() {
   for (const s of stars) {
     ctx.beginPath();
-    ctx.arc(s.x * width, s.y * height, s.r * scale * 1.1, 0, 2 * Math.PI);
+    ctx.arc(s.x * width, s.y * height, s.r * scale, 0, 2 * Math.PI);
     ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
     ctx.fill();
   }
 }
 
-// Dynamiczny, pełnoekranowy akrecyjny dysk i czarna dziura
-function drawBlackHole(t) {
-  // Parametry
-  const rEvent = 180 * scale;
-  const rDiskIn = 210 * scale;
-  const rDiskOut = 340 * scale;
+// Parametry czarnej dziury
+const tilt = -22 * Math.PI / 180; // ukos w lewo, jak na grafice
+const rEvent = 180;
+const rDiskIn = 200;
+const rDiskOut = 410;
 
-  // Efekt grawitacyjnego soczewkowania (górny dysk)
-  for(let i=0;i<120;i++) {
-    const angle = -Math.PI + (i * (Math.PI * 2 / 120));
-    for(let side=0;side<2;side++) {
-      const updown = side===0 ? 1 : -1;
-      const yDisk = centerY + Math.sin(angle) * rDiskOut * 0.22 * updown;
-      const xDisk = centerX + Math.cos(angle) * rDiskOut;
+// Funkcja do rysowania dysku akrecyjnego z efektem grawitacyjnego soczewkowania
+function drawAccretionDisk(t) {
+  ctx.save();
+  ctx.translate(centerX, centerY);
+  ctx.rotate(tilt);
+
+  for (let i = 0; i < 230; i++) {
+    let a = -Math.PI + (i * (2 * Math.PI / 230));
+    // Góra i dół dysku, z efektem relatywistycznego rozciągnięcia
+    for (let side = 0; side < 2; side++) {
+      const sign = side === 0 ? 1 : -1;
       ctx.save();
       ctx.beginPath();
-      ctx.moveTo(centerX + Math.cos(angle) * rDiskIn, centerY + Math.sin(angle) * rDiskIn * 0.17 * updown);
-      ctx.lineTo(xDisk, yDisk);
-      ctx.lineWidth = 12.5 * scale + Math.sin(angle*3 + t/690) * 2.5 * scale;
-      // Kolor: jasny żółto-biały do pomarańczowego
-      const grad = ctx.createLinearGradient(centerX, centerY, xDisk, yDisk);
-      grad.addColorStop(0, "#fff8e7");
-      grad.addColorStop(0.7, "#f7b36b");
-      grad.addColorStop(1, "#ff6d2f");
+      // Soczewkowanie światła (wypukła deformacja)
+      let y1 = Math.sin(a) * rDiskIn * 0.18 * sign;
+      let y2 = Math.sin(a) * rDiskOut * (0.27 + 0.18 * Math.cos(a + t/3600)) * sign;
+      let x1 = Math.cos(a) * rDiskIn;
+      let x2 = Math.cos(a) * rDiskOut;
+
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+
+      // Kolorystyka – jasny, filmowy dysk (biel, żółć, pomarańcz)
+      let grad = ctx.createLinearGradient(x1, y1, x2, y2);
+      grad.addColorStop(0, "rgba(255,255,240,0.90)");
+      grad.addColorStop(0.45, "rgba(255,195,120,0.87)");
+      grad.addColorStop(0.75, "rgba(182,90,48,0.40)");
+      grad.addColorStop(1, "rgba(50,20,10,0.10)");
       ctx.strokeStyle = grad;
-      ctx.shadowColor = "#fbbd4c";
-      ctx.shadowBlur = 28 * scale + Math.abs(Math.cos(angle*2 + t/1100)) * 9 * scale;
-      ctx.globalAlpha = 0.70 + 0.23 * Math.sin(angle + t/1800);
+
+      ctx.lineWidth = 16 * scale + 5 * Math.abs(Math.sin(a + t/1600)) * scale;
+      ctx.shadowColor = "rgba(255, 230, 180, 0.38)";
+      ctx.shadowBlur = 30 * scale;
+      ctx.globalAlpha = 0.7 + 0.15 * Math.sin(a + t/2100);
+
       ctx.stroke();
       ctx.restore();
     }
   }
 
-  // Jaśniejsza poświata wokół dysku
-  for(let j=0;j<2;j++) {
+  // Poświata wokół dysku
+  for (let j = 0; j < 2; j++) {
     ctx.save();
     ctx.beginPath();
-    ctx.ellipse(centerX, centerY, rDiskOut * (1.03 + j*0.04), 77 * scale * (1.1 - j*0.11), 0, 0, 2 * Math.PI);
-    ctx.strokeStyle = `rgba(255,230,120,${0.09 - j*0.028})`;
-    ctx.lineWidth = 30 * scale * (0.75 - j*0.13);
-    ctx.shadowColor = "#fff7bd";
-    ctx.shadowBlur = 45 * scale * (0.95 - j*0.13);
-    ctx.globalAlpha = 0.38 - j*0.1;
+    ctx.ellipse(0, 0, rDiskOut * (1.03 + j*0.04), 100 * scale * (1.1-j*0.17), 0, 0, 2 * Math.PI);
+    ctx.strokeStyle = `rgba(255,220,130,${0.12-j*0.04})`;
+    ctx.lineWidth = 39 * scale * (0.7-j*0.22);
+    ctx.shadowColor = "#fff7c7";
+    ctx.shadowBlur = 55 * scale * (0.95-j*0.17);
+    ctx.globalAlpha = 0.22 - j*0.08;
     ctx.stroke();
     ctx.restore();
   }
 
-  // Centralny cień czarnej dziury
+  ctx.restore();
+}
+
+// Rysowanie horyzontu zdarzeń z poświatą i zakrzywieniem światła
+function drawBlackHoleShadow(t) {
   ctx.save();
+  ctx.translate(centerX, centerY);
+  ctx.rotate(tilt);
+
+  // Poświata
   ctx.beginPath();
-  ctx.arc(centerX, centerY, rEvent*1.03, 0, Math.PI*2);
+  ctx.arc(0, 0, rEvent * scale * 1.11, 0, Math.PI * 2);
+  let grad = ctx.createRadialGradient(0, 0, rEvent * scale * 0.8, 0, 0, rEvent * scale * 1.13);
+  grad.addColorStop(0, "rgba(255,220,120,0.05)");
+  grad.addColorStop(0.8, "rgba(255,200,120,0.13)");
+  grad.addColorStop(1, "rgba(12,0,15,0.01)");
+  ctx.globalAlpha = 0.82;
+  ctx.fillStyle = grad;
+  ctx.shadowColor = "rgba(255,220,120,0.2)";
+  ctx.shadowBlur = 23 * scale;
+  ctx.fill();
+
+  // Cień czarnej dziury (horyzont zdarzeń)
+  ctx.beginPath();
+  ctx.arc(0, 0, rEvent * scale, 0, Math.PI * 2);
   ctx.globalAlpha = 0.99;
   ctx.fillStyle = "#000";
-  ctx.shadowColor = "#19130a";
-  ctx.shadowBlur = 65 * scale;
+  ctx.shadowColor = "#2a1a0a";
+  ctx.shadowBlur = 70 * scale;
   ctx.fill();
   ctx.restore();
+}
 
-  // Poświata wokół event horizon
+// Efekt planetarnej poświaty na dole (ziemia)
+function drawPlanetaryGlow(t) {
   ctx.save();
+  // Przesunięcie i obrót, aby przypominać planetę z obrazu
+  ctx.translate(centerX, height * 1.08);
+  ctx.rotate(-0.13 + tilt * 0.45);
+  let grad = ctx.createRadialGradient(0, 0, 0, 0, 0, width * 0.95);
+  grad.addColorStop(0, "rgba(210,240,255,0.18)");
+  grad.addColorStop(0.5, "rgba(180,190,220,0.09)");
+  grad.addColorStop(1, "rgba(0,0,0,0)");
   ctx.beginPath();
-  ctx.arc(centerX, centerY, rEvent*1.13, 0, Math.PI*2);
-  let glow = ctx.createRadialGradient(centerX, centerY, rEvent*0.85, centerX, centerY, rEvent*1.13);
-  glow.addColorStop(0, "rgba(255,220,120,0.02)");
-  glow.addColorStop(0.82, "rgba(255,190,100,0.12)");
-  glow.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.globalAlpha = 0.72;
-  ctx.fillStyle = glow;
-  ctx.shadowColor = "#ffad29";
-  ctx.shadowBlur = 17 * scale;
+  ctx.ellipse(0, 0, width * 1.03, height * 0.57, 0, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.globalAlpha = 0.81;
   ctx.fill();
   ctx.restore();
 }
@@ -113,7 +150,9 @@ function drawBlackHole(t) {
 function animate() {
   ctx.clearRect(0, 0, width, height);
   drawStars();
-  drawBlackHole(performance.now());
+  drawPlanetaryGlow(performance.now());
+  drawAccretionDisk(performance.now());
+  drawBlackHoleShadow(performance.now());
   requestAnimationFrame(animate);
 }
 animate();
