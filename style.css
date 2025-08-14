@@ -16,14 +16,17 @@ body {
   overflow: hidden;
 }
 
-#blackhole-canvas {
+.blackhole-bg {
   position: fixed;
   top: 0; left: 0;
   width: 100vw;
   height: 100vh;
   z-index: 0;
-  background: radial-gradient(ellipse at center, #181b20 80%, #000 100%);
-  display: block;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/8/8b/Black_Hole_-_Messier_87.jpg') center center / cover no-repeat, #000;
+}
+
+#blackhole-canvas {
+  display: none;
 }
 
 .overlay-content {
@@ -75,11 +78,11 @@ main {
   margin: 0 auto 1vh auto;
   width: 100vw;
   max-width: 700px;
-  background: rgba(0,0,0,0.14);
+  background: rgba(0,0,0,0.14); /* blur removed */
   border-radius: 18px;
   box-shadow: 0 0 16px 0 #0005;
   padding: 2vw 2vw 1vw 2vw;
-  backdrop-filter: blur(8px);
+  /* backdrop-filter: blur(8px); usunięto */
 }
 
 section {
