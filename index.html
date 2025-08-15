@@ -7,17 +7,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="blackhole-canvas"></canvas>
   <div class="overlay-content">
     <header>
       <h1 class="universe-pop">Mohihito Universe</h1>
-      <h2 class="subtitle">Witaj w świecie Kuby</h2>
+      <h2 class="subtitle">witaj w świecie Kuby, rozgość się</h2>
     </header>
     <main>
       <section class="works">
-        <h2>Prace</h2>
+        <h2>Prace (Zdjęcia)</h2>
         <div class="gallery" id="photo-gallery">
-          <p>Dodaj swoje zdjęcia!</p>
+          <p>Ładowanie zdjęć...</p>
         </div>
       </section>
       <section class="videos">
@@ -27,7 +26,7 @@
         </div>
       </section>
       <section class="socials">
-        <h2>Social Media</h2>
+        <h2>Moje Social Media</h2>
         <ul>
           <li><a href="https://instagram.com/" target="_blank">Instagram</a></li>
           <li><a href="https://facebook.com/" target="_blank">Facebook</a></li>
@@ -35,13 +34,32 @@
       </section>
       <section class="contact">
         <h2>Kontakt</h2>
-        <p><a href="mailto:mohihito33@gmail.com">mohihito33@gmail.com</a></p>
+        <p>Napisz do mnie: <a href="mailto:mohihito33@gmail.com">mohihito33@gmail.com</a></p>
       </section>
     </main>
     <footer>
       <p>&copy; 2025 Mohihito Universe</p>
     </footer>
   </div>
-  <script src="blackhole.js"></script>
+  <script>
+    // Lekka automatyczna galeria
+    const galleryDiv = document.getElementById('photo-gallery');
+    fetch('https://api.github.com/repos/mohihito/Mohihito-Universe/contents/gallery')
+      .then(res => res.json())
+      .then(files => {
+        galleryDiv.innerHTML = '';
+        files.forEach(file => {
+          if(file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+            const img = document.createElement('img');
+            img.src = file.download_url;
+            img.alt = file.name;
+            img.loading = "lazy";
+            galleryDiv.appendChild(img);
+          }
+        });
+        if(galleryDiv.innerHTML === '') galleryDiv.innerHTML = '<p>Brak zdjęć w galerii.</p>';
+      })
+      .catch(() => galleryDiv.innerHTML = '<p>Nie udało się załadować galerii.</p>');
+  </script>
 </body>
 </html>
