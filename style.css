@@ -1,32 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap');
 
-html, body {
-  height: 100%;
-  width: 100%;
+body {
   margin: 0;
   padding: 0;
-}
-
-body {
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
-  color: #f3f3f3;
-  background: #111;
   min-height: 100vh;
   min-width: 100vw;
-  overflow: hidden;
-}
-
-.blackhole-bg {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  background: url('https://upload.wikimedia.org/wikipedia/commons/8/8b/Black_Hole_-_Messier_87.jpg') center center / cover no-repeat, #000;
-}
-
-#blackhole-canvas {
-  display: none;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  color: #f3f3f3;
+  background: url('https://i.imgur.com/EoCVHqV.jpg') center center / cover no-repeat #000;
 }
 
 .overlay-content {
@@ -38,15 +19,17 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  pointer-events: none;
 }
 
 header, main, footer {
-  width: 100vw;
-  max-width: 740px;
-  margin: 0 auto;
+  background: rgba(0,0,0,0.25);
+  border-radius: 18px;
+  box-shadow: 0 0 16px 0 #0005;
+  margin: 2vw auto;
+  width: 90vw;
+  max-width: 700px;
   text-align: center;
-  pointer-events: auto;
+  padding: 2vw;
 }
 
 header {
@@ -76,13 +59,6 @@ header {
 
 main {
   margin: 0 auto 1vh auto;
-  width: 100vw;
-  max-width: 700px;
-  background: rgba(0,0,0,0.14); /* blur removed */
-  border-radius: 18px;
-  box-shadow: 0 0 16px 0 #0005;
-  padding: 2vw 2vw 1vw 2vw;
-  /* backdrop-filter: blur(8px); usunięto */
 }
 
 section {
@@ -106,7 +82,7 @@ h2 {
   margin-bottom: 0.6em;
 }
 
-.gallery img, .gallery video {
+.gallery img {
   max-width: 180px;
   border-radius: 9px;
   box-shadow: 0 0 24px #ffb40044;
@@ -151,5 +127,5 @@ footer {
   .universe-pop { font-size: 2.1rem;}
   .subtitle { font-size: 1.1rem;}
   main { padding: 2vw 2vw 1vw 2vw; }
-  .gallery img, .gallery video { max-width: 95px; }
+  .gallery img { max-width: 95px; }
 }
