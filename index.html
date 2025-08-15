@@ -5,6 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mohihito Universe</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Dodatkowe style dla nowej sekcji - można je przenieść do pliku style.css */
+    .website-item {
+      text-align: center;
+      margin: 30px auto;
+      max-width: 400px;
+    }
+    .website-thumbnail {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      display: block; /* Usuwa dodatkową przestrzeń pod obrazkiem */
+    }
+    .website-thumbnail:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    }
+    .website-title {
+      display: block;
+      margin-top: 15px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff; /* Zakładając, że pasuje do reszty stylów */
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .website-title:hover {
+      color: #ccc; /* Lekka zmiana koloru po najechaniu */
+      text-decoration: underline;
+    }
+    .works h3 {
+        margin-top: 2.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  </style>
 </head>
 <body>
   <video autoplay loop muted playsinline poster="fallback.jpg" id="bgvideo">
@@ -18,17 +56,37 @@
     </header>
     <main>
       <section class="works">
-        <h2>Prace (Zdjęcia)</h2>
-        <div class="gallery" id="photo-gallery">
-          <p>Ładowanie zdjęć...</p>
+        <h2>Prace</h2>
+
+        <!-- Nowa podsekcja ze stronami internetowymi -->
+        <div class="websites">
+          <h3>Moje strony internetowe</h3>
+          <div class="website-item">
+            <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer">
+              <img src="gallery/page1.png" alt="Podgląd strony Stowarzyszenia Wolnej Myśli" class="website-thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/600x400/222/fff?text=Brak+obrazka';">
+            </a>
+            <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer" class="website-title">
+              Strona Stowarzyszenia
+            </a>
+          </div>
+        </div>
+
+        <!-- Istniejąca galeria zdjęć -->
+        <div class="photos">
+            <h3>Zdjęcia</h3>
+            <div class="gallery" id="photo-gallery">
+              <p>Ładowanie zdjęć...</p>
+            </div>
         </div>
       </section>
+
       <section class="videos">
         <h2>Filmy</h2>
         <div class="gallery" id="video-gallery">
           <p>Dodaj swoje filmy!</p>
         </div>
       </section>
+
       <section class="socials">
         <h2>Moje Social Media</h2>
         <ul>
@@ -36,6 +94,7 @@
           <li><a href="https://facebook.com/" target="_blank">Facebook</a></li>
         </ul>
       </section>
+
       <section class="contact">
         <h2>Kontakt</h2>
         <p>Napisz do mnie: <a href="mailto:mohihito33@gmail.com">mohihito33@gmail.com</a></p>
@@ -53,7 +112,8 @@
       .then(files => {
         galleryDiv.innerHTML = '';
         files.forEach(file => {
-          if(file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+          // Pomiń plik page1.png, aby nie wyświetlał się w galerii
+          if(file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i) && file.name !== 'page1.png') {
             const img = document.createElement('img');
             img.src = file.download_url;
             img.alt = file.name;
