@@ -6,7 +6,7 @@
   <title>Mohihito Universe</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Dodatkowe style dla nowej sekcji - można je przenieść do pliku style.css */
+    /* Style dla sekcji stron internetowych */
     .website-item {
       text-align: center;
       margin: 30px auto;
@@ -18,7 +18,7 @@
       border-radius: 12px;
       transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      display: block; /* Usuwa dodatkową przestrzeń pod obrazkiem */
+      display: block;
     }
     .website-thumbnail:hover {
       transform: scale(1.05);
@@ -29,18 +29,73 @@
       margin-top: 15px;
       font-size: 1.1rem;
       font-weight: bold;
-      color: #fff; /* Zakładając, że pasuje do reszty stylów */
+      color: #fff;
       text-decoration: none;
       transition: color 0.3s;
     }
     .website-title:hover {
-      color: #ccc; /* Lekka zmiana koloru po najechaniu */
+      color: #ccc;
       text-decoration: underline;
     }
     .works h3 {
         margin-top: 2.5rem;
         padding-bottom: 0.5rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* NOWE STYLE DLA GALERII ZDJĘĆ */
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+    .gallery img {
+        width: 100%;
+        height: 250px; /* Ustawienie stałej wysokości */
+        object-fit: cover; /* Zapobiega zniekształceniom obrazu */
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .gallery img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+
+    /* NOWE STYLE DLA MODALA (pełny ekran) */
+    .modal {
+        display: none; /* Domyślnie ukryty */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.9);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 90vh;
+    }
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .close-modal:hover,
+    .close-modal:focus {
+        color: #bbb;
+        text-decoration: none;
     }
   </style>
 </head>
@@ -58,7 +113,6 @@
       <section class="works">
         <h2>Prace</h2>
 
-        <!-- Nowa podsekcja ze stronami internetowymi -->
         <div class="websites">
           <h3>Moje strony internetowe</h3>
           <div class="website-item">
@@ -71,7 +125,6 @@
           </div>
         </div>
 
-        <!-- Istniejąca galeria zdjęć -->
         <div class="photos">
             <h3>moje prace wykonane przy pomocy sztucznej inteligencji (AI)</h3>
             <div class="gallery" id="photo-gallery">
@@ -104,26 +157,57 @@
       <p>&copy; 2025 Mohihito Universe</p>
     </footer>
   </div>
+
+  <!-- NOWY ELEMENT HTML DLA MODALA -->
+  <div id="image-modal" class="modal">
+    <span class="close-modal" id="close-modal-btn">&times;</span>
+    <img class="modal-content" id="modal-image">
+  </div>
+
   <script>
     // Lekka automatyczna galeria
     const galleryDiv = document.getElementById('photo-gallery');
+    
+    // NOWE ZMIENNE DLA MODALA
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-image');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
     fetch('https://api.github.com/repos/mohihito/Mohihito-Universe/contents/gallery')
       .then(res => res.json())
       .then(files => {
         galleryDiv.innerHTML = '';
         files.forEach(file => {
-          // Pomiń plik page1.png, aby nie wyświetlał się w galerii
           if(file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i) && file.name !== 'page1.png') {
             const img = document.createElement('img');
             img.src = file.download_url;
             img.alt = file.name;
             img.loading = "lazy";
+            
+            // ZAKTUALIZOWANA LOGIKA - DODANIE EVENT LISTENER
+            img.addEventListener('click', () => {
+                modal.style.display = "flex";
+                modalImg.src = img.src;
+            });
+
             galleryDiv.appendChild(img);
           }
         });
         if(galleryDiv.innerHTML === '') galleryDiv.innerHTML = '<p>Brak zdjęć w galerii.</p>';
       })
       .catch(() => galleryDiv.innerHTML = '<p>Nie udało się załadować galerii.</p>');
+
+    // NOWA LOGIKA DO ZAMYKANIA MODALA
+    closeModalBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Zamykanie modala po kliknięciu poza obrazkiem
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
   </script>
 </body>
 </html>
