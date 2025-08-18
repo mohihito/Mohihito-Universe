@@ -1,478 +1,390 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohihito Universe</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Globalne style, czcionki i tło */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0d0d0d;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mohihito Universe</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Reset i podstawowe style */
+    html {
+        scroll-behavior: smooth; /* Włącza płynne przewijanie dla całej strony */
+    }
+    body {
+        margin: 0;
+        font-family: sans-serif;
+    }
 
-        #bgvideo {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -100;
-            background-size: cover;
-            filter: brightness(0.5); /* Ciemniejsze tło */
-        }
+    /* Style dla sekcji stron internetowych */
+    .website-item {
+      text-align: center;
+      margin: 30px auto;
+      max-width: 400px;
+    }
+    .website-thumbnail {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      display: block;
+    }
+    .website-thumbnail:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    }
+    .website-title {
+      display: block;
+      margin-top: 15px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .website-title:hover {
+      color: #ccc;
+      text-decoration: underline;
+    }
+    .works h3, .socials h3 {
+        margin-top: 2.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-        .overlay-content {
-            position: relative;
-            z-index: 10;
-            padding-top: 20px; /* Miejsce dla nagłówka */
-        }
+    /* ZAKTUALIZOWANE STYLE GALERII - EFEKT "CZEKOLADY" */
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+    .gallery img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+        border: 4px solid #4a2c2a;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    }
+    .gallery img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        border-color: #6d4c41;
+    }
 
-        /* Nowy, rozwijany nagłówek (Sticky Shrinking Header) */
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(13, 13, 13, 0.85); /* Lekko przezroczyste tło */
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            padding: 15px 50px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s ease-in-out;
-            z-index: 999;
-        }
+    /* NOWE STYLE DLA NAGŁÓWKA */
+    .main-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1001;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        background-color: transparent;
+        transition: background-color 0.4s ease, padding 0.4s ease;
+    }
+    .main-header.scrolled {
+        background-color: rgba(10, 10, 10, 0.8);
+        backdrop-filter: blur(5px);
+        padding: 10px 40px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .main-header .logo {
+        height: 60px;
+        transition: height 0.4s ease;
+    }
+    .main-header.scrolled .logo {
+        height: 40px;
+    }
+    .main-header nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 25px;
+    }
+    .main-header nav a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: color 0.3s;
+        position: relative;
+        padding-bottom: 5px;
+    }
+    .main-header nav a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        background-color: #fff;
+        transition: all 0.3s ease-in-out;
+    }
+    .main-header nav a:hover::after {
+        width: 100%;
+        left: 0;
+    }
 
-        .sticky-header .logo {
-            height: 60px; /* Duże logo */
-            transition: all 0.3s ease-in-out;
-        }
+    /* NOWE STYLE DLA SEKCJI SOCIAL MEDIA */
+    .social-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        justify-items: center;
+        align-items: center;
+    }
+    .social-grid iframe {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+    .instagram-embeds .instagram-media {
+        margin: 0 auto !important; /* Ważne, aby wycentrować embedy z Insta */
+    }
 
-        .sticky-header.shrunken {
-            padding: 10px 50px;
-        }
 
-        .sticky-header.shrunken .logo {
-            height: 40px; /* Mniejsze logo po przewinięciu */
-        }
-
-        .sticky-header nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            gap: 30px;
-        }
-
-        .sticky-header nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-
-        .sticky-header nav a:hover {
-            color: #00bcd4; /* Jasnoniebieski na hover */
-            transform: scale(1.1);
-        }
-
-        /* Nagłówki i teksty */
-        h1.universe-pop {
-            font-size: 3rem;
-            text-align: center;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        h2.subtitle {
-            font-size: 1.5rem;
-            text-align: center;
-            color: #ccc;
-        }
-
-        main {
-            padding: 0 50px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        section {
-            padding: 60px 0;
-        }
-
-        h2 {
-            font-size: 2.2rem;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 10px;
-            margin-bottom: 40px;
-        }
-
-        h3 {
-            font-size: 1.5rem;
-            margin-top: 2.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Style dla sekcji stron internetowych */
-        .website-item {
-            text-align: center;
-            margin: 30px auto;
-            max-width: 400px;
-        }
-        .website-thumbnail {
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            display: block;
-        }
-        .website-thumbnail:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-        }
-        .website-title {
-            display: block;
-            margin-top: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #fff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .website-title:hover {
-            color: #ccc;
-            text-decoration: underline;
-        }
-
-        /* ZAKTUALIZOWANE STYLE GALERII - EFEKT "CZEKOLADY" */
+    /* Media query dla tabletów */
+    @media (max-width: 1024px) {
         .gallery {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 kolumny na dużych ekranach */
-            gap: 10px; /* Mniejsze odstępy, jak w tabliczce czekolady */
-            padding: 20px 0;
+            grid-template-columns: repeat(3, 1fr);
         }
-        .gallery img {
-            width: 100%;
-            aspect-ratio: 4 / 3; /* Jednolite proporcje prostokątne */
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
-            border: 4px solid #4a2c2a; /* Ciemnobrązowa ramka */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        .main-header {
+            padding: 15px 20px;
         }
-        .gallery img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            border-color: #6d4c41; /* Jaśniejsza ramka po najechaniu */
-        }
-        
-        /* Style dla sekcji filmów (iframe) */
-        .video-gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            justify-content: center;
-        }
-        .video-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9; /* Utrzymywanie proporcji */
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-        .video-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .social-link {
-            text-align: center;
-            text-decoration: none;
-            color: #fff;
-            display: block;
-            margin-top: 10px;
-            transition: color 0.3s;
-        }
-        .social-link:hover {
-            color: #00bcd4;
-            text-decoration: underline;
-        }
+    }
 
-        /* Style dla modala (pełny ekran) */
-        .modal {
-            display: none; /* Domyślnie ukryty */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
+    /* Media query dla telefonów */
+    @media (max-width: 768px) {
+        .gallery, .social-grid {
+            grid-template-columns: repeat(1, 1fr);
         }
-        .modal-content {
-            margin: auto;
-            display: block;
-            max-width: 90%;
-            max-height: 90vh;
+        .main-header {
+            flex-direction: column;
+            gap: 10px;
         }
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
+        .main-header.scrolled {
+            padding: 10px 20px;
         }
-        .close-modal:hover,
-        .close-modal:focus {
-            color: #bbb;
-            text-decoration: none;
+        .main-header nav ul {
+            gap: 15px;
         }
+        .main-header nav a {
+            font-size: 0.9rem;
+        }
+    }
 
-        /* Style dla telefonów */
-        @media (max-width: 768px) {
-            .sticky-header {
-                padding: 10px 20px;
-            }
-            .sticky-header nav ul {
-                gap: 15px;
-            }
-            main {
-                padding: 0 20px;
-            }
-            .gallery {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .video-gallery-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+
+    /* STYLE DLA MODALA (pełny ekran) */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.9);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 90vh;
+    }
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .close-modal:hover,
+    .close-modal:focus {
+        color: #bbb;
+        text-decoration: none;
+    }
+  </style>
 </head>
 <body>
-    <video autoplay loop muted playsinline poster="https://placehold.co/1920x1080/222/fff?text=Fallback" id="bgvideo">
-        <source src="https://assets.codepen.io/1577742/mohihito-tlo.webm" type="video/webm">
-        Twoja przeglądarka nie obsługuje tła wideo.
-    </video>
 
-    <!-- Nowy, rozwijany nagłówek -->
-    <header id="sticky-header" class="sticky-header">
-        <a href="#home">
-            <img src="https://placehold.co/150x50/000000/ffffff?text=LOGO.SVG" alt="Logo Mohihito Universe" class="logo">
-        </a>
-        <nav>
-            <ul>
-                <li><a href="#prace">Prace</a></li>
-                <li><a href="#filmy">Filmy</a></li>
-                <li><a href="#socials">Social Media</a></li>
-                <li><a href="#contact">Kontakt</a></li>
-            </ul>
-        </nav>
+  <!-- NOWY, STAŁY NAGŁÓWEK -->
+  <header class="main-header" id="main-header">
+    <a href="#"><img src="logo.svg" alt="Logo Mohihito" class="logo"></a>
+    <nav>
+      <ul>
+        <li><a href="#works">Prace</a></li>
+        <li><a href="#videos">Filmy</a></li>
+        <li><a href="#socials">Social Media</a></li>
+        <li><a href="#contact">Kontakt</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <video autoplay loop muted playsinline poster="fallback.jpg" id="bgvideo">
+    <source src="tlo.webm" type="video/webm">
+    Twoja przeglądarka nie obsługuje tła wideo.
+  </video>
+  <div class="overlay-content">
+    <header>
+      <h1 class="universe-pop">Mohihito Universe</h1>
+      <h2 class="subtitle">witaj w świecie Kuby, rozgość się</h2>
     </header>
+    <main>
+      <section id="works" class="works">
+        <h2>Prace</h2>
 
-    <div class="overlay-content">
-        <header id="home">
-            <h1 class="universe-pop">Mohihito Universe</h1>
-            <h2 class="subtitle">witaj w świecie Kuby, rozgość się</h2>
-        </header>
+        <div class="websites">
+          <h3>Moje strony internetowe</h3>
+          <div class="website-item">
+            <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer">
+              <img src="page1.png" alt="Podgląd strony Stowarzyszenia Wolnej Myśli" class="website-thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/600x400/222/fff?text=Brak+obrazka';">
+            </a>
+            <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer" class="website-title">
+              Strona Stowarzyszenia
+            </a>
+          </div>
+        </div>
 
-        <main>
-            <section class="works" id="prace">
-                <h2>Prace</h2>
-                <div class="websites">
-                    <h3>Moje strony internetowe</h3>
-                    <div class="website-item">
-                        <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/600x400/222/fff?text=Podgląd+strony+SWW" alt="Podgląd strony Stowarzyszenia Wolnej Myśli" class="website-thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/600x400/222/fff?text=Brak+obrazka';">
-                        </a>
-                        <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer" class="website-title">
-                            Strona Stowarzyszenia
-                        </a>
-                    </div>
-                </div>
+        <div class="photos">
+            <h3>moje prace wykonane przy pomocy sztucznej inteligencji (AI)</h3>
+            <div class="gallery" id="photo-gallery">
+              <p>Ładowanie zdjęć...</p>
+            </div>
+        </div>
+      </section>
 
-                <div class="photos">
-                    <h3>moje prace wykonane przy pomocy sztucznej inteligencji (AI)</h3>
-                    <div class="gallery" id="photo-gallery">
-                        <p>Ładowanie zdjęć...</p>
-                    </div>
-                </div>
-            </section>
+      <section id="videos" class="videos">
+        <h2>Filmy</h2>
+        <div class="gallery" id="video-gallery">
+          <p>Dodaj swoje filmy!</p>
+        </div>
+      </section>
 
-            <section class="videos" id="filmy">
-                <h2>Filmy</h2>
-                <div class="gallery" id="video-gallery">
-                    <p>Dodaj swoje filmy!</p>
-                </div>
-            </section>
-
-            <section class="socials" id="socials">
-                <h2>Moje Social Media</h2>
-
-                <div class="facebook-videos">
-                    <h3>Filmy z Facebooka</h3>
-                    <div class="video-gallery-grid">
-                        <div class="video-container">
-                            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F1860206624545672%2F&show_text=false&width=267&t=0" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                        </div>
-                        <div class="video-container">
-                            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F2783347092016192%2F&show_text=false&width=267&t=0" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                        </div>
-                        <div class="video-container">
-                            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F2146530369184483%2F&show_text=false&width=267&t=0" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                        </div>
-                        <div class="video-container">
-                            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F751072853988013%2F&show_text=false&width=267&t=0" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                        </div>
-                        <div class="video-container">
-                            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F597250730122082%2F&show_text=false&width=267&t=0" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                        </div>
-                        <div class="video-container">
-                            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F1062217285625920%2F&show_text=false&width=267&t=0" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="instagram-posts">
-                    <h3>Posty z Instagrama</h3>
-                    <div class="gallery" id="instagram-gallery">
-                        <a href="https://www.instagram.com/reel/DM2VSRVzVnr/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/400x300/4a2c2a/fff?text=IG+Reel+1" alt="Instagram Reel" onerror="this.src='https://placehold.co/400x300/4a2c2a/fff?text=IG+Reel+1'">
-                        </a>
-                        <a href="https://www.instagram.com/reel/DMTOL91zdJh/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/400x300/4a2c2a/fff?text=IG+Reel+2" alt="Instagram Reel" onerror="this.src='https://placehold.co/400x300/4a2c2a/fff?text=IG+Reel+2'">
-                        </a>
-                        <a href="https://www.instagram.com/p/DMIj_1LI9BU/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+3" alt="Instagram Post" onerror="this.src='https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+3'">
-                        </a>
-                        <a href="https://www.instagram.com/p/DL9vFcMI658/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+4" alt="Instagram Post" onerror="this.src='https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+4'">
-                        </a>
-                        <a href="https://www.instagram.com/p/DL7iE0wIkIs/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+5" alt="Instagram Post" onerror="this.src='https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+5'">
-                        </a>
-                        <a href="https://www.instagram.com/p/DL4iMndIozv/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+6" alt="Instagram Post" onerror="this.src='https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+6'">
-                        </a>
-                        <a href="https://www.instagram.com/p/DL2A0PKoRr8/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+7" alt="Instagram Post" onerror="this.src='https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+7'">
-                        </a>
-                        <a href="https://www.instagram.com/p/DLzaxX0Tilj/" target="_blank" rel="noopener noreferrer">
-                            <img src="https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+8" alt="Instagram Post" onerror="this.src='https://placehold.co/400x300/4a2c2a/fff?text=IG+Post+8'">
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <section class="contact" id="contact">
-                <h2>Kontakt</h2>
-                <p>Napisz do mnie: <a href="mailto:mohihito33@gmail.com">mohihito33@gmail.com</a></p>
-            </section>
-        </main>
+      <!-- ZAKTUALIZOWANA SEKCJA SOCIAL MEDIA -->
+      <section id="socials" class="socials">
+        <h2>Moje Social Media</h2>
         
-        <footer>
-            <p>&copy; 2025 Mohihito Universe</p>
-        </footer>
-    </div>
+        <h3>Facebook</h3>
+        <div class="social-grid facebook-videos">
+          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F1860206624545672%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F2783347092016192%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F2146530369184483%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F751072853988013%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F597250730122082%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F1062217285625920%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+        </div>
 
-    <!-- ELEMENT HTML DLA MODALA -->
-    <div id="image-modal" class="modal">
-        <span class="close-modal" id="close-modal-btn">&times;</span>
-        <img class="modal-content" id="modal-image">
-    </div>
+        <h3>Instagram</h3>
+        <div class="social-grid instagram-embeds">
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DM2VSRVzVnr/" data-instgrm-version="14"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DMTOL91zdJh/" data-instgrm-version="14"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DMIj_1LI9BU/" data-instgrm-version="14"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL9vFcMI658/" data-instgrm-version="14"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL7iE0wIkIs/" data-instgrm-version="14"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL4iMndIozv/" data-instgrm-version="14"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL2A0PKoRr8/" data-instgrm-version="14"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DLzaxX0Tilj/" data-instgrm-version="14"></blockquote>
+        </div>
+      </section>
 
-    <script>
-        // Lekka automatyczna galeria
-        const galleryDiv = document.getElementById('photo-gallery');
-        
-        // ZMIENNE DLA MODALA
-        const modal = document.getElementById('image-modal');
-        const modalImg = document.getElementById('modal-image');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-        const header = document.getElementById('sticky-header');
+      <section id="contact" class="contact">
+        <h2>Kontakt</h2>
+        <p>Napisz do mnie: <a href="mailto:mohihito33@gmail.com">mohihito33@gmail.com</a></p>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2025 Mohihito Universe</p>
+    </footer>
+  </div>
 
-        // Funkcja do płynnego przewijania
-        function smoothScroll(targetId) {
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - header.offsetHeight, // Odsunięcie o wysokość nagłówka
+  <!-- ELEMENT HTML DLA MODALA -->
+  <div id="image-modal" class="modal">
+    <span class="close-modal" id="close-modal-btn">&times;</span>
+    <img class="modal-content" id="modal-image">
+  </div>
+
+  <!-- SKRYPT DO OSADZANIA TREŚCI Z INSTAGRAMA -->
+  <script async src="//www.instagram.com/embed.js"></script>
+
+  <script>
+    // Lekka automatyczna galeria
+    const galleryDiv = document.getElementById('photo-gallery');
+    
+    // ZMIENNE DLA MODALA
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-image');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    fetch('https://api.github.com/repos/mohihito/Mohihito-Universe/contents/gallery')
+      .then(res => res.json())
+      .then(files => {
+        galleryDiv.innerHTML = '';
+        files.forEach(file => {
+          if(file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i) && file.name !== 'page1.png') {
+            const img = document.createElement('img');
+            img.src = file.download_url;
+            img.alt = file.name;
+            img.loading = "lazy";
+            
+            img.addEventListener('click', () => {
+                modal.style.display = "flex";
+                modalImg.src = img.src;
+            });
+
+            galleryDiv.appendChild(img);
+          }
+        });
+        if(galleryDiv.innerHTML === '') galleryDiv.innerHTML = '<p>Brak zdjęć w galerii.</p>';
+      })
+      .catch(() => galleryDiv.innerHTML = '<p>Nie udało się załadować galerii.</p>');
+
+    // LOGIKA DO ZAMYKANIA MODALA
+    closeModalBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Zamykanie modala po kliknięciu poza obrazkiem
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // NOWY KOD DLA NAGŁÓWKA I NAWIGACJI
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // Płynne przewijanie (jeśli 'scroll-behavior: smooth' w CSS nie jest wystarczające dla wszystkich przeglądarek)
+    document.querySelectorAll('.main-header nav a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            // Sprawdza, czy link prowadzi do ID na tej samej stronie
+            if (this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
             }
-        }
-
-        // Dodawanie zdarzeń do linków w nagłówku
-        document.querySelectorAll('.sticky-header nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                smoothScroll(targetId);
-            });
         });
+    });
 
-        // Logika rozwijania/zwijania nagłówka
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('shrunken');
-            } else {
-                header.classList.remove('shrunken');
-            }
-        });
-
-        fetch('https://api.github.com/repos/mohihito/Mohihito-Universe/contents/gallery')
-            .then(res => res.json())
-            .then(files => {
-                galleryDiv.innerHTML = '';
-                files.forEach(file => {
-                    if(file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i) && file.name !== 'page1.png') {
-                        const img = document.createElement('img');
-                        img.src = file.download_url;
-                        img.alt = file.name;
-                        img.loading = "lazy";
-                        
-                        img.addEventListener('click', () => {
-                            modal.style.display = "flex";
-                            modalImg.src = img.src;
-                        });
-
-                        galleryDiv.appendChild(img);
-                    }
-                });
-                if(galleryDiv.innerHTML === '') galleryDiv.innerHTML = '<p>Brak zdjęć w galerii.</p>';
-            })
-            .catch(() => galleryDiv.innerHTML = '<p>Nie udało się załadować galerii.</p>');
-
-        // LOGIKA DO ZAMYKANIA MODALA
-        closeModalBtn.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // Zamykanie modala po kliknięciu poza obrazkiem
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
+  </script>
 </body>
 </html>
