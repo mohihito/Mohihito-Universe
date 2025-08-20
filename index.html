@@ -3,234 +3,362 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mohihito Universe - Świat Kuby: prace, filmy, social media i kontakt.">
+  <meta name="keywords" content="Mohihito, web development, AI art, filmy, social media">
+  <meta property="og:title" content="Mohihito Universe">
+  <meta property="og:description" content="Witaj w świecie Kuby - odkryj prace, filmy i więcej.">
+  <meta property="og:image" content="logo.svg">
+  <meta property="og:url" content="https://example.com">
   <title>Mohihito Universe</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.ico">
   <style>
-    /* Reset i podstawowe style */
-    html {
-        scroll-behavior: smooth;
-    }
-    body {
-        margin: 0;
-        font-family: sans-serif;
-    }
-    
-    /* NAPRAWA: Dodano padding-top, aby treść nie chowała się pod stałym nagłówkiem */
-    .overlay-content {
-        padding-top: 100px; /* Zapewnia odstęp od góry */
+    /* CSS Variables for dark mode and theming */
+    :root {
+      --bg-color: #000;
+      --text-color: #fff;
+      --accent-color: #6d4c41;
+      --shadow-color: rgba(0,0,0,0.4);
+      --header-height: 80px;
+      --header-height-scrolled: 60px;
     }
 
-    /* Style dla sekcji stron internetowych */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #111;
+        --text-color: #eee;
+        --accent-color: #8d6e63;
+        --shadow-color: rgba(0,0,0,0.6);
+      }
+    }
+
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: clamp(14px, 1.5vw, 16px);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    /* Video background */
+    #bgvideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: brightness(0.8);
+    }
+
+    /* Shrinking sticky header */
+    .main-header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1001;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: transparent;
+      transition: all 0.4s ease;
+      height: var(--header-height);
+    }
+
+    .main-header.scrolled {
+      background-color: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      height: var(--header-height-scrolled);
+      padding: 0.5rem 2rem;
+    }
+
+    .main-header .logo {
+      height: 100%;
+      max-height: 50px;
+      transition: max-height 0.4s ease;
+    }
+
+    .main-header.scrolled .logo {
+      max-height: 40px;
+    }
+
+    .main-header nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .main-header nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: bold;
+      position: relative;
+      padding-bottom: 0.3rem;
+      transition: color 0.3s;
+    }
+
+    .main-header nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 50%;
+      background-color: var(--text-color);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .main-header nav a:hover::after {
+      width: 100%;
+      left: 0;
+    }
+
+    /* Overlay content */
+    .overlay-content {
+      padding-top: var(--header-height);
+      max-width: min(1200px, 90%);
+      margin: 0 auto;
+    }
+
+    .main-header.scrolled + .overlay-content {
+      padding-top: var(--header-height-scrolled);
+    }
+
+    h1.universe-pop {
+      font-size: clamp(2rem, 5vw, 4rem);
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    h2.subtitle {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    /* Sections */
+    section {
+      margin: 4rem 0;
+    }
+
+    h2, h3 {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Websites */
+    .websites {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
     .website-item {
       text-align: center;
-      margin: 30px auto;
-      max-width: 400px;
     }
+
     .website-thumbnail {
       width: 100%;
       height: auto;
       border-radius: 12px;
       transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 5px 15px var(--shadow-color);
       display: block;
+      loading: lazy;
     }
+
     .website-thumbnail:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 25px var(--shadow-color);
     }
+
     .website-title {
       display: block;
-      margin-top: 15px;
-      font-size: 1.1rem;
+      margin-top: 1rem;
       font-weight: bold;
-      color: #fff;
+      color: var(--text-color);
       text-decoration: none;
       transition: color 0.3s;
     }
+
     .website-title:hover {
-      color: #ccc;
-      text-decoration: underline;
-    }
-    .works h3, .socials h3 {
-        margin-top: 2.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--accent-color);
     }
 
-    /* Style galerii */
+    /* Gallery */
     .gallery {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
     }
+
     .gallery img {
-        width: 100%;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
-        border: 4px solid #4a2c2a;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      border: 4px solid var(--accent-color);
+      box-shadow: 0 4px 8px var(--shadow-color);
+      loading: lazy;
     }
+
     .gallery img:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        border-color: #6d4c41;
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px var(--shadow-color);
+      border-color: var(--accent-color);
     }
 
-    /* PRZEBUDOWANE STYLE NAGŁÓWKA - Wzór: strona Stowarzyszenia */
-    .main-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1001;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 40px; /* Stały padding */
-        background-color: transparent;
-        transition: background-color 0.4s ease; /* Tylko animacja tła */
-    }
-    .main-header.scrolled {
-        background-color: rgba(10, 10, 10, 0.9);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .main-header .logo {
-        height: 50px; /* Stała wysokość loga */
-        transition: none; /* Usunięta animacja zmiany rozmiaru */
-    }
-    .main-header nav ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        gap: 25px;
-    }
-    .main-header nav a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 1rem;
-        position: relative;
-        padding-bottom: 5px;
-        transition: color 0.3s;
-    }
-    .main-header nav a::after {
-        content: '';
-        position: absolute;
-        width: 0;
-        height: 2px;
-        bottom: 0;
-        left: 50%;
-        background-color: #fff;
-        transition: all 0.3s ease-in-out;
-    }
-    .main-header nav a:hover::after {
-        width: 100%;
-        left: 0;
+    /* Socials */
+    .socials {
+      position: relative;
     }
 
-    /* Style sekcji Social Media */
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      transition: transform 0.3s;
+    }
+
+    .social-icon:hover {
+      transform: scale(1.1);
+    }
+
     .social-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        justify-items: center;
-        align-items: center;
-    }
-    .social-grid iframe {
-        max-width: 100%;
-        border-radius: 12px;
-    }
-    .instagram-embeds .instagram-media {
-        margin: 0 auto !important;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      justify-items: center;
     }
 
-    /* Media query dla tabletów */
-    @media (max-width: 1024px) {
-        .gallery {
-            grid-template-columns: repeat(3, 1fr);
-        }
-        .main-header {
-            padding: 15px 20px;
-        }
+    .social-grid iframe,
+    .social-grid blockquote {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px var(--shadow-color);
     }
 
-    /* Media query dla telefonów */
-    @media (max-width: 768px) {
-        /* ZMIANA: Galeria ma teraz 3 kolumny na telefonie */
-        .gallery {
-            grid-template-columns: repeat(3, 1fr);
-        }
-        .social-grid {
-             grid-template-columns: repeat(1, 1fr);
-        }
-        .main-header {
-            /* Zostawiamy flex-direction: row, aby uniknąć problemów z wysokością */
-            flex-wrap: wrap; /* Pozwala elementom zawijać się w razie potrzeby */
-            justify-content: center; /* Wyśrodkowuje logo i nawigację */
-            padding: 10px 15px;
-        }
-        .main-header nav ul {
-            gap: 15px;
-        }
-        .main-header nav a {
-            font-size: 0.9rem;
-        }
-        /* NAPRAWA: Zwiększamy padding, aby zrobić miejsce na nagłówek */
-        .overlay-content {
-            padding-top: 150px;
-        }
-        .universe-pop {
-            font-size: 2.5rem; /* Lekkie zmniejszenie napisu na telefonach */
-        }
-    }
-
-    /* Style dla modala */
+    /* Modal */
     .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.9);
-        justify-content: center;
-        align-items: center;
+      display: none;
+      position: fixed;
+      z-index: 1002;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
     }
+
     .modal-content {
-        margin: auto;
-        display: block;
-        max-width: 90%;
-        max-height: 90vh;
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      max-height: 90vh;
+      border-radius: 8px;
     }
+
     .close-modal {
-        position: absolute;
-        top: 20px;
-        right: 35px;
-        color: #f1f1f1;
-        font-size: 40px;
-        font-weight: bold;
-        transition: 0.3s;
-        cursor: pointer;
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #f1f1f1;
+      font-size: 40px;
+      font-weight: bold;
+      transition: 0.3s;
+      cursor: pointer;
     }
-    .close-modal:hover,
-    .close-modal:focus {
-        color: #bbb;
-        text-decoration: none;
+
+    .close-modal:hover {
+      color: #bbb;
+    }
+
+    /* Contact and footer */
+    .contact p {
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Media queries - mobile-first */
+    @media (min-width: 769px) {
+      .gallery {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-header {
+        padding: 0.5rem 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .main-header nav ul {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .overlay-content {
+        padding-top: calc(var(--header-height) + 20px);
+      }
+
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .social-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gallery {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-<body>
-
-  <header class="main-header" id="main-header">
-    <a href="#"><img src="logo.svg" alt="Logo Mohihito" class="logo"></a>
-    <nav>
+<body itemscope itemtype="https://schema.org/WebPage">
+  <header class="main-header" id="main-header" role="banner">
+    <a href="#"><img src="logo.svg" alt="Logo Mohihito Universe" class="logo"></a>
+    <nav role="navigation">
       <ul>
         <li><a href="#works">Prace</a></li>
         <li><a href="#videos">Filmy</a></li>
@@ -240,145 +368,160 @@
     </nav>
   </header>
 
-  <video autoplay loop muted playsinline poster="fallback.jpg" id="bgvideo">
+  <video autoplay loop muted playsinline poster="fallback.jpg" id="bgvideo" aria-hidden="true">
     <source src="tlo.webm" type="video/webm">
     Twoja przeglądarka nie obsługuje tła wideo.
   </video>
-  
-  <div class="overlay-content">
+
+  <div class="overlay-content" role="main">
     <header>
-      <h1 class="universe-pop">Mohihito Universe</h1>
+      <h1 class="universe-pop" itemprop="name">Mohihito Universe</h1>
       <h2 class="subtitle">witaj w świecie Kuby, rozgość się</h2>
     </header>
+
     <main>
-      <section id="works" class="works">
+      <section id="works" class="works" itemscope itemtype="https://schema.org/CreativeWork">
         <h2>Prace</h2>
-        <div class="websites">
+        <article class="websites">
           <h3>Moje strony internetowe</h3>
-          <div class="website-item">
-            <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer">
-              <img src="page1.png" alt="Podgląd strony Stowarzyszenia Wolnej Myśli" class="website-thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/600x400/222/fff?text=Brak+obrazka';">
-            </a>
-            <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer" class="website-title">
-              Strona Stowarzyszenia
-            </a>
-          </div>
-        </div>
-        <div class="photos">
-            <h3>moje prace wykonane przy pomocy sztucznej inteligencji (AI)</h3>
-            <div class="gallery" id="photo-gallery">
-              <p>Ładowanie zdjęć...</p>
+          <div class="websites">
+            <div class="website-item">
+              <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer">
+                <img src="page1.png" alt="Podgląd strony Stowarzyszenia Wolnej Myśli" class="website-thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/600x400/222/fff?text=Brak+obrazka';" loading="lazy">
+              </a>
+              <a href="https://stowarzyszenie-wolnej-mysli.github.io/stowarzyszenie-wolnej-mysli/" target="_blank" rel="noopener noreferrer" class="website-title">
+                Strona Stowarzyszenia
+              </a>
             </div>
-        </div>
+            <!-- Dodaj więcej stron jeśli potrzeba -->
+          </div>
+        </article>
+        <article class="photos">
+          <h3>Moje prace wykonane przy pomocy sztucznej inteligencji (AI)</h3>
+          <div class="gallery" id="photo-gallery" role="region" aria-label="Galeria zdjęć">
+            <p>Ładowanie zdjęć...</p>
+          </div>
+        </article>
       </section>
 
       <section id="videos" class="videos">
         <h2>Filmy</h2>
-        <div class="gallery" id="video-gallery">
+        <div class="gallery" id="video-gallery" role="region" aria-label="Galeria filmów">
           <p>Dodaj swoje filmy!</p>
         </div>
       </section>
 
       <section id="socials" class="socials">
         <h2>Moje Social Media</h2>
-        <h3>Facebook</h3>
-        <div class="social-grid facebook-videos">
-          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F1860206624545672%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
-          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F2783347092016192%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
-          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F2146530369184483%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
-          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F751072853988013%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
-          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F597250730122082%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
-          <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F1062217285625920%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+        <div class="social-links">
+          <a href="https://www.instagram.com/stowarzyszenie_wolnej_mysli/" target="_blank" rel="noopener noreferrer" aria-label="Profil na Instagramie">
+            <img src="instagram-icon.svg" alt="Ikona Instagrama" class="social-icon" loading="lazy">
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=61577230182577" target="_blank" rel="noopener noreferrer" aria-label="Profil na Facebooku">
+            <img src="facebook-icon.svg" alt="Ikona Facebooka" class="social-icon" loading="lazy">
+          </a>
         </div>
-        <h3>Instagram</h3>
-        <div class="social-grid instagram-embeds">
-            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DM2VSRVzVnr/" data-instgrm-version="14"></blockquote>
-            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DMTOL91zdJh/" data-instgrm-version="14"></blockquote>
-            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DMIj_1LI9BU/" data-instgrm-version="14"></blockquote>
-            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL9vFcMI658/" data-instgrm-version="14"></blockquote>
-            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL7iE0wIkIs/" data-instgrm-version="14"></blockquote>
-            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL4iMndIozv/" data-instgrm-version="14"></blockquote>
-            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL2A0PKoRr8/" data-instgrm-version="14"></blockquote>
-            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DLzaxX0Tilj/" data-instgrm-version="14"></blockquote>
-        </div>
+        <article>
+          <h3>Facebook</h3>
+          <div class="social-grid facebook-videos">
+            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F1860206624545672%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" loading="lazy"></iframe>
+            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F2783347092016192%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" loading="lazy"></iframe>
+            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F2146530369184483%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" loading="lazy"></iframe>
+            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F751072853988013%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" loading="lazy"></iframe>
+            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F597250730122082%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" loading="lazy"></iframe>
+            <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2F61577230182577%2Fvideos%2F1062217285625920%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true" loading="lazy"></iframe>
+          </div>
+        </article>
+        <article>
+          <h3>Instagram</h3>
+          <div class="social-grid instagram-embeds">
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DM2VSRVzVnr/" data-instgrm-version="14" loading="lazy"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DMTOL91zdJh/" data-instgrm-version="14" loading="lazy"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DMIj_1LI9BU/" data-instgrm-version="14" loading="lazy"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL9vFcMI658/" data-instgrm-version="14" loading="lazy"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL7iE0wIkIs/" data-instgrm-version="14" loading="lazy"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL4iMndIozv/" data-instgrm-version="14" loading="lazy"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DL2A0PKoRr8/" data-instgrm-version="14" loading="lazy"></blockquote>
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DLzaxX0Tilj/" data-instgrm-version="14" loading="lazy"></blockquote>
+          </div>
+        </article>
       </section>
 
       <section id="contact" class="contact">
         <h2>Kontakt</h2>
-        <p>Napisz do mnie: <a href="mailto:mohihito33@gmail.com">mohihito33@gmail.com</a></p>
+        <p>Napisz do mnie: <a href="mailto:mohihito33@gmail.com" itemprop="email">mohihito33@gmail.com</a></p>
       </section>
     </main>
-    <footer>
+
+    <footer role="contentinfo">
       <p>&copy; 2025 Mohihito Universe</p>
     </footer>
   </div>
 
-  <div id="image-modal" class="modal">
-    <span class="close-modal" id="close-modal-btn">&times;</span>
-    <img class="modal-content" id="modal-image">
+  <div id="image-modal" class="modal" role="dialog" aria-modal="true" aria-label="Powiększony obraz">
+    <span class="close-modal" id="close-modal-btn" aria-label="Zamknij modal">&times;</span>
+    <img class="modal-content" id="modal-image" alt="Powiększony obraz">
   </div>
 
-  <script async src="//www.instagram.com/embed.js"></script>
+  <script async defer src="//www.instagram.com/embed.js"></script>
+  <script type="module">
+    // Header shrinking logic
+    const header = document.getElementById('main-header');
+    const handleScroll = () => {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
 
-  <script>
-    // Automatyczna galeria
+    // Smooth scrolling
+    document.querySelectorAll('.main-header nav a').forEach(anchor => {
+      anchor.addEventListener('click', async e => {
+        if (anchor.getAttribute('href').startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(anchor.getAttribute('href'));
+          target?.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Photo gallery fetch
     const galleryDiv = document.getElementById('photo-gallery');
     const modal = document.getElementById('image-modal');
     const modalImg = document.getElementById('modal-image');
     const closeModalBtn = document.getElementById('close-modal-btn');
 
-    fetch('https://api.github.com/repos/mohihito/Mohihito-Universe/contents/gallery')
-      .then(res => res.json())
-      .then(files => {
-        galleryDiv.innerHTML = '';
-        files.forEach(file => {
-          if(file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i) && file.name !== 'page1.png') {
-            const img = document.createElement('img');
-            img.src = file.download_url;
-            img.alt = file.name;
-            img.loading = "lazy";
-            img.addEventListener('click', () => {
-                modal.style.display = "flex";
-                modalImg.src = img.src;
-            });
-            galleryDiv.appendChild(img);
-          }
-        });
-        if(galleryDiv.innerHTML === '') galleryDiv.innerHTML = '<p>Brak zdjęć w galerii.</p>';
-      })
-      .catch(() => galleryDiv.innerHTML = '<p>Nie udało się załadować galerii.</p>');
-
-    // Logika zamykania modala
-    closeModalBtn.onclick = function() {
-        modal.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+    try {
+      const res = await fetch('https://api.github.com/repos/mohihito/Mohihito-Universe/contents/gallery');
+      const files = await res.json();
+      galleryDiv.innerHTML = '';
+      files.forEach(file => {
+        if (file.type === 'file' && file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i) && file.name !== 'page1.png') {
+          const img = document.createElement('img');
+          img.src = file.download_url;
+          img.alt = file.name.replace(/\.[^/.]+$/, '');
+          img.loading = 'lazy';
+          img.addEventListener('click', () => {
+            modal.style.display = 'flex';
+            modalImg.src = img.src;
+            modalImg.alt = img.alt;
+          });
+          galleryDiv.appendChild(img);
         }
+      });
+      if (!galleryDiv.hasChildNodes()) galleryDiv.innerHTML = '<p>Brak zdjęć w galerii.</p>';
+    } catch (error) {
+      galleryDiv.innerHTML = '<p>Nie udało się załadować galerii. Błąd: ' + error.message + '</p>';
     }
 
-    // Kod dla nagłówka (bez zmian, nadal działa poprawnie)
-    const header = document.getElementById('main-header');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
+    // Modal close logic
+    closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+    window.addEventListener('click', event => {
+      if (event.target === modal) modal.style.display = 'none';
     });
 
-    // Płynne przewijanie (bez zmian)
-    document.querySelectorAll('.main-header nav a').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            if (this.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
+    // PWA service worker (if applicable)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.error('Service Worker Error:', err));
+    }
   </script>
 </body>
 </html>
