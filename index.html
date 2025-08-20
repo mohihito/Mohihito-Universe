@@ -12,6 +12,7 @@
   <title>Mohihito Universe</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="favicon.ico">
+  <link rel="preload" href="tlo.webm" as="video">
   <style>
     /* CSS Variables for dark mode and theming */
     :root {
@@ -136,6 +137,7 @@
       padding-top: var(--header-height);
       max-width: min(1200px, 90%);
       margin: 0 auto;
+      transition: padding-top 0.4s ease;
     }
 
     .main-header.scrolled + .overlay-content {
@@ -467,8 +469,11 @@
   <script type="module">
     // Header shrinking logic
     const header = document.getElementById('main-header');
+    const overlayContent = document.querySelector('.overlay-content');
     const handleScroll = () => {
-      header.classList.toggle('scrolled', window.scrollY > 50);
+      const scrolled = window.scrollY > 50;
+      header.classList.toggle('scrolled', scrolled);
+      overlayContent.style.paddingTop = scrolled ? 'var(--header-height-scrolled)' : 'var(--header-height)';
     };
     window.addEventListener('scroll', handleScroll);
 
